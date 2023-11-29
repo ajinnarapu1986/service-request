@@ -1,0 +1,336 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--/*/	
+<headerfiles th:replace="~{fragments/general.html :: headerfiles}"> </headerfiles> 
+/*/-->
+<body>
+	
+	<header th:replace="~{fragments/general.html :: header}"> </header>	
+	
+	<div class="container-fluid">		
+	    <div class="row" >
+	    	<div class="col-md-12 ">
+    			<div class="col-md-offset-3 col-md-6">
+    				<div th:if="${message} != null">
+					    <div class="alert alert-dismissible" th:classappend="${alertCss}" role="alert">
+						<button type="button" class="close" data-dismiss="alert"  aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button>
+						<strong><span th:text="'Message: ' + ${message}"></span></strong>
+					    </div>
+					</div>
+    			</div>
+    		</div>    		
+		    <div class="col-md-12">
+	            <div class="panel panel-primary">
+				  <div class="panel-heading">
+				    <h3 class="panel-title">Request History</h3> 				    
+				  </div>
+				     <div class="panel-body" >
+				     	<div class="table-responsive">
+					     	<table id="requestInfoList" style="width: 100%" class="table table-hover table-bordered table-striped dt-responsive nowrap">
+								<thead>
+									<tr>
+						                <th>ID</th>
+					                    <th>Type</th>
+					                    <th>Status</th>
+					                    <th>Description</th>
+					                    <th>Created By</th>
+					                    <th>Created Date</th>
+					                    <th>Modified By</th>
+					                    <th>Modified Date</th>
+					                    <th data-orderable="false">Operation</th>
+						            </tr>
+								</thead>
+							</table>
+						</div>
+				     </div>			          
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /.container -->
+	
+	<div class="modal fade" id="addNewServiceRequestModal" tabindex="-1" role="dialog" aria-labelledby="requestInfoModalLabel" aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <!-- Modal Header -->
+	            <div class="modal-header modal-header-primary">
+	                <button type="button" class="close" data-dismiss="modal">
+	                	<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+	                </button>
+	                <h3 class="modal-title">Raise New Service Request</h3>
+	            </div>
+	            <!-- Modal Body -->
+	            <div class="modal-body">                
+	                <form action="#" class="form-horizontal" id="requestInfoForm" th:object="${requestInfo}" th:action="@{/request-info/save}" method="post">
+	                  <div class="form-group">
+			                <label class="col-sm-3 control-label">Request Type</label>
+			                <div class="col-sm-9">
+			                    <select th:field="*{type}" class="form-control input-sm" id="type" >
+								    <option value="" >-- Select --</option>
+    								<option th:each="type : ${requestTypeList}" th:value="${type}" th:text="${type}"></option>
+								</select>
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label class="col-sm-3 control-label">Status</label>
+			                <div class="col-sm-9">
+			                    <select th:field="*{status}" class="form-control input-sm" id="status" th:disabled="true">
+								    <option value="" >-- Select --</option>
+    								<option th:each="status : ${statusList}" th:value="${status}" th:text="${status}"></option>
+								</select>
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label class="col-sm-3 control-label">More Details</label>
+			                <div class="col-sm-9">
+			                    <!-- <input type="text" id="description" th:field="*{description}" class="form-control" /> -->
+			                    <textarea th:field="*{description}" id="description" class="form-control"></textarea>			                    
+			                </div>
+			            </div>
+			            <div class="modal-footer" >
+		            		<button type="button" class="btn btn-default btnMinWidth" data-dismiss="modal">Close</button>
+	               			<button type="button" class="btn btn-primary btnMinWidth" id="btnSave">Submit Request</button>
+			            </div>
+	                </form>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
+	<div class="modal fade" id="approveServiceRequestModal" tabindex="-1" role="dialog" aria-labelledby="approveRequestInfoModalLabel" aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <!-- Modal Header -->
+	            <div class="modal-header modal-header-primary">
+	                <button type="button" class="close" data-dismiss="modal">
+	                	<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+	                </button>
+	                <h3 class="modal-title">Raise New Service Request</h3>
+	            </div>
+	            <!-- Modal Body -->
+	            <div class="modal-body">
+	                <form action="#" class="form-horizontal" id="requestInfoApproveForm" th:object="${requestInfo}" th:action="@{/request-info/approve}" method="post">
+	                  <div class="form-group">
+			                <label class="col-sm-3 control-label">Request Type</label>
+			                <div class="col-sm-9">
+			                    <select th:field="*{type}" class="form-control input-sm" id="editType" th:disabled="true">
+								    <option value="" >-- Select --</option>
+    								<option th:each="type : ${requestTypeList}" th:value="${type}" th:text="${type}"></option>
+								</select>
+								<input type="hidden" th:field="*{id}" id="editReqInfoId"/>			                    
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label class="col-sm-3 control-label">Status</label>
+			                <div class="col-sm-9">
+			                    <select th:field="*{status}" class="form-control input-sm" id="editStatus" th:disabled="true">
+								    <option value="" >-- Select --</option>
+    								<option th:each="status : ${statusList}" th:value="${status}" th:text="${status}"></option>
+								</select>
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label class="col-sm-3 control-label">More Details</label>
+			                <div class="col-sm-9">
+			                    <!-- <input type="text" id="editDescription" th:field="*{description}" class="form-control" th:disabled="true"/> -->
+			                    <textarea id="editDescription" th:field="*{description}" class="form-control" th:disabled="true"></textarea>			                    
+			                </div>
+			            </div>
+			            <div class="modal-footer" >
+		            		<button type="button" class="btn btn-default btnMinWidth" data-dismiss="modal">Close</button>
+	               			<button type="button" class="btn btn-primary btnMinWidth" id="btnApproveRequestSubmit">Approve Request</button>
+	               			<button type="button" class="btn btn-danger btnMinWidth" id="btnRejectRequestSubmit">Reject Request</button>
+			            </div>
+	                </form>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
+	<footer th:replace="~{fragments/general.html :: footer}"> </footer>	
+	
+	<script type="text/javascript" th:src="@{/content/js/jquery-3.2.1.min.js}"></script>
+	<script type="text/javascript" th:src="@{/content/js/transition.js}"></script>
+	<script type="text/javascript" th:src="@{/content/js/collapse.js}"></script>
+	<script type="text/javascript" th:src="@{/content/js/moment.js}"></script>
+	<script type="text/javascript" th:src="@{/content/bs/js/bootstrap.min.js}"></script>
+	<script type="text/javascript" th:src="@{/content/js/bootstrap-datepicker.min.js}"></script>
+	<script type="text/javascript" th:src="@{/content/js/numberToWords.js}" ></script>	
+	<script type="text/javascript" th:src="@{/content/js/bootstrap-typeahead.js}" ></script>	
+	<script type="text/javascript" th:src="@{/content/js/jquery.dataTables.js}"></script>
+	<script type="text/javascript" th:src="@{/content/js/dataTables.bootstrap.js}"></script>	
+	<script type="text/javascript" th:src="@{/content/js/dataTables.fixedColumns.js}"></script>
+	<script type="text/javascript" th:src="@{/content/js/jquery.maskedinput.js}" ></script>
+	<script type="text/javascript" th:src="@{/content/sweetalert2/dist/sweetalert2.min.js}" ></script>
+	<script type="text/javascript" th:src="@{/content/js/jquery.spring-friendly.js}"></script>
+				
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		var _ctx = $("meta[name='ctx']").attr("content");
+		if (_ctx === undefined) {
+			_ctx = "";
+		}
+		$(document).ready(function() {
+			$("#menuHome").addClass('active');			
+			
+			$("body").tooltip({ selector: '[data-toggle=tooltip]' }); 
+			
+			var table = $('table#requestInfoList').DataTable({
+				'ajax' : '/sr/request-info/dt',
+				/*"paging" 	 : $('table#sample tbody tr').length>10,*/
+				'serverSide' : true,				
+				columns : [
+					{
+	                    data: 'id'
+	                },
+	                {
+	                    data: 'type'
+	                },
+	                {
+	                    data: 'status'
+	                },
+	                {
+	                    data: 'description'
+	                },
+	                {
+	                    data: 'createdBy'
+	                },
+	                {
+	                    data: 'createdDate',
+	                },
+	                {
+	                    data: 'modifiedBy'
+	                },
+	                {
+	                    data: 'modifiedDate',
+	                }, 
+	                {
+						// add Operation column not persisted on the server-side
+						data : 'Operation',
+						orderable : false,
+						searchable : false,
+						render : function(data, type, row) {
+							var $c = '';
+							if(row.status == 'PENDING_L1' && [[${#authorization.expression('hasAuthority("ROLE_L1_APPROVE")')}]]){
+								$c += '<button type="button" class="btn btn-sm btn-success" onclick="approveOrRejectRequest(' + row.id + ', 1)" id="btnEdit"><span class="glyphicon glyphicon-edit"></span> &nbsp; L1 Approve</button> ';
+							}
+							if(row.status == 'PENDING_L2' && [[${#authorization.expression('hasAuthority("ROLE_L2_APPROVE")')}]]){
+								$c += '<button type="button" class="btn btn-sm btn-success" onclick="approveOrRejectRequest(' + row.id + ', 1)" id="btnEdit"><span class="glyphicon glyphicon-edit"></span> &nbsp; L2 Approve</button> ';
+							}
+							if([[${#authorization.expression('hasAnyAuthority("ROLE_L1_APPROVE", "ROLE_L2_APPROVE")')}]]){
+								$c += '<button class="btn btn-sm btn-danger" onclick="approveOrRejectRequest(' + row.id + ', 0)" id="btnReject"><span class="glyphicon glyphicon-trash"></span> &nbsp; Reject</button> ';
+							}
+							return $c;
+						}
+					}
+            	]
+			});
+			
+			$('<a class="btn btn-sm btn-success" style="margin:0px 10px;" onclick="addNewServiceRequest()">New Service Request</a>').prependTo('div.dataTables_filter');
+						
+			$("#btnSave").on('click', function(e) {
+				var message = '';				
+				if ($("#type").val() === '') {
+					message += 'Please select Type.<br/><br/>';
+				}
+				if ($("#description").val() === '') {
+					message += 'Please provide Description.<br/><br/>';
+				}
+				if ($.trim(message) !== '') {
+					swal({
+						  title: 'Please fill Validations!',
+						  html: message,
+					});
+					return false;
+				}
+				
+				swal({
+				  title: 'Are you sure?',
+				  html: message,
+				  type: 'info',
+				  showCancelButton: true,
+				  showCloseButton: true,
+				  confirmButtonColor: '#3085d6',
+				  cancelButtonColor: '#d33',
+				  confirmButtonText: 'Submit',
+				}).then((result) => {
+					if (result.value) {
+						console.log(':: message ::' + message);
+						if ($.trim(message) !== '') {
+							swal('Please fill Validations!');
+						} else {							
+							$("#requestInfoForm").submit();
+						}
+					}
+				});
+			});
+		});
+		
+		$("#btnApproveRequestSubmit").on('click', function(e) {
+			
+			swal({
+			  title: 'Are you sure?',
+			  html: 'Are you sure you want to Approve the request.',
+			  type: 'info',
+			  showCancelButton: true,
+			  showCloseButton: true,
+			  confirmButtonColor: '#3085d6',
+			  cancelButtonColor: '#d33',
+			  confirmButtonText: 'Submit',
+			}).then((result) => {
+				if (result.value) {					
+					$("#requestInfoApproveForm").submit();
+				}
+			});
+		});	
+		
+		var addNewServiceRequest = function() {			
+			$("#addNewServiceRequestModal").modal({
+				show : true,
+				keyboard: false,
+				backdrop: 'static'
+			});
+		}
+		var approveOrRejectRequest = function(requestInfoId, approveOrReject) {			
+			$.ajax({
+		        async : true,
+		        type : "GET",
+		        url : '/sr/request-info/get',
+		        dataType : "json",
+		        data: {
+		        	id: requestInfoId,
+		        },
+		        success : function(reqInfo) {		        	
+		        	if (reqInfo !== null) {
+		        		$("#editReqInfoId").val(reqInfo.id);
+		        		$("#editType").val(reqInfo.type);
+		        		$("#editStatus").val(reqInfo.status);
+		        		$("#editDescription").val(reqInfo.description);
+		        		if (approveOrReject === 1) {
+		        			$("#btnRejectRequestSubmit").prop('disabled', true);
+		        			$("#btnApproveRequestSubmit").prop('disabled', false);
+		        		} else if (approveOrReject === 0) {
+		        			$("#btnApproveRequestSubmit").prop('disabled', true);
+		        			$("#btnRejectRequestSubmit").prop('disabled', false);
+		        		}
+		        	}
+		        },
+		        error : function(xhr, ajaxOptions, thrownError) {
+		            alert(xhr.status);
+		            alert(thrownError);
+		        }
+		    });
+			
+			$("#approveServiceRequestModal").modal({
+				show : true,
+				keyboard: false,
+				backdrop: 'static'
+			});
+		}
+					
+	/*]]>*/
+    </script>
+</body>
+</html>

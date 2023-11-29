@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="headerfiles">
+	<title>Service Request</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="ctx" th:content="@{/}" />
+	
+	<!-- favicon -->
+	<link rel="icon" th:href="@{/content/images/favicon_16x16.png}" href="images/favicon_16x16.png"/>
+	
+	<link rel="stylesheet" type="text/css" th:href="@{/content/bs/css/bootstrap.min.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/content/css/bootstrap-datepicker3.css}" href="css/bootstrap-datepicker3.css"/>
+	<link rel="stylesheet" type="text/css" th:href="@{/content/css/style.css}" href="css/style.css"/>
+	<link rel="stylesheet" type="text/css" th:href="@{/content/sweetalert2/dist/sweetalert2.css}" href="sweetalert2/dist/sweetalert2.css"/>
+	<link rel="stylesheet" type="text/css" th:href="@{/content/css/sticky-footer-navbar.css}" href="css/sticky-footer-navbar.css"/>
+	<link rel="stylesheet" type="text/css" th:href="@{/content/css/dataTables.bootstrap.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/content/css/buttons.dataTables.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/content/css/fixedColumns.bootstrap.css}" />
+</head>
+<body>
+    
+      <nav th:fragment="header" class="navbar navbar-default ">
+		<div class="container">
+			<div class="navbar-header">
+				<a href="javascript:;"><img th:src="@{/content/images/logo.png}" /></a>
+				<span class="appName">Service Request</span>
+			</div>
+			<ul class="nav navbar-nav navbar-right">
+				<li id="menuHome" sec:authorize="hasAnyAuthority('ROLE_L1_APPROVE', 'ROLE_L2_APPROVE')" ><a class="color-green" th:href="@{/request-info/list}">Pending Approvals</a></li>
+				<li id="menuRequestItems"><a class="color-green" th:href="@{/request-item/list}">Request Items</a></li>
+				<!--
+				<li id="menuReportLinks"><a style="color: #008000;" th:href="@{/report-link/}">Reports</a></li>			
+				<li id="menuDropdown" class="dropdown">
+					<a style="color: #008000;" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">More... <span class="caret"></span></a>
+					<ul class="dropdown-menu">
+					    <li id="menuCustomer"><a th:href="@{/customer/list}">Customer</a></li>
+						<li id="menuPriceList"><a th:href="@{/price-list/list}">Price List</a></li>
+		                <li role="separator" class="divider"></li>
+		                <li id="menuSalesReturn"><a th:href="@{/sales-return/}">Sales Return</a></li>
+						<li id="menuStockTransfer"><a th:href="@{/stock-transfer/}">Stock Transfer</a></li>
+						<li id="menuPouchPrint"><a th:href="@{/pouch-print/}">Pouch Print</a></li>
+						<li id="menuLedger"><a th:href="@{/ledger/list}">Ledger</a></li>
+						<li id="menuProcurement"><a th:href="@{/procurement/}">Procurement</a></li>
+					</ul>	
+				</li>
+				 -->
+				<li>
+					<a href="javascript: document.logoutForm.submit()"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Logout</a>
+				   	<form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+				      	<input type="submit" value="Logout"/>
+				   	</form>
+			   	</li>	        
+			</ul>
+		</div>
+	</nav>
+    
+    <div sec:authorize="isAuthenticated()">
+  This content is only shown to authenticated users.
+</div>
+<div sec:authorize="hasRole('ROLE_ADMIN')">
+  This content is only shown to administrators.
+</div>
+<div sec:authorize="hasRole('ROLE_USER')">
+  This content is only shown to users.
+</div>
+    
+   	<footer th:fragment="footer" class="footer">
+		<div class="container">
+			<p class="text-muted">
+				Copyright &copy; <span th:text="${#dates.year(#dates.createNow())}"></span> <a href="#" target="_blank">Service Request</a> Inc.
+			</p>
+		</div>
+	</footer>
+    
+    
+	
+	
+</body>
+</html>

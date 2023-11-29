@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:/www.thymeleaf.org">
+<head>
+<title>Service Request</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="ctx" th:content="@{/}" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- favicon -->
+<!--===============================================================================================-->
+<link rel="icon" th:href="@{/content/images/favicon_16x16.png}" href="images/favicon-256.png" />
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" th:href="@{/content/login_v18/vendor/bootstrap/css/bootstrap.min.css}" />
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" th:href="@{/content/login_v18/fonts/font-awesome-4.7.0/css/font-awesome.min.css}" />
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" th:href="@{/content/login_v18/fonts/Linearicons-Free-v1.0.0/icon-font.min.css}" />
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" th:href="@{/content/login_v18/vendor/animate/animate.css}" />
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" th:href="@{/content/login_v18/vendor/css-hamburgers/hamburgers.min.css}" />
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" th:href="@{/content/login_v18/vendor/animsition/css/animsition.min.css}" />
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" th:href="@{/content/login_v18/css/util.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/content/login_v18/css/main.css}" />
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" th:href="@{/content/sweetalert2/dist/sweetalert2.css}" />
+<!--===============================================================================================-->
+<!-- <link rel="stylesheet" type="text/css" th:href="@{/css/sticky-footer-navbar.css}" /> -->
+<!--===============================================================================================-->
+<style type="text/css">
+	body {
+		background-color: #f7f7f7;
+	}
+	.carousel {
+		position: relative;
+		padding: 0px 10px;
+	}
+	.card-body {	    
+	    border: 1px solid #C0C0C0;
+	}
+</style>
+</head>
+<body>
+
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+				<form class="login100-form validate-form" th:action="@{/login}"
+					method="POST">
+					<span class="login100-form-title p-b-43">Log In to continue</span>
+					<div align="center" th:if="${param.error}">
+						<p style="font-size: 20; color: #FF1C19;">Email or Password invalid, please verify</p>
+					</div>
+					<div class="wrap-input100 validate-input" data-validate="Username is required">
+						<input class="input100" type="text" id="username" autocomplete="false" name="username"> 
+						<span class="focus-input100"></span> <span class="label-input100">Username</span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate="Password is required">
+						<input class="input100" type="password" autocomplete="false" name="password"> 
+						<span class="focus-input100"></span> <span class="label-input100">Password</span>
+					</div>
+
+					<div class="flex-sb-m w-full p-t-3 p-b-32">
+						<div class="contact100-form-checkbox"></div>
+						<div><a href="#" class="txt1">Forgot Password?</a></div>
+					</div>
+
+					<div class="container-login100-form-btn">
+						<button type="submit" class="login100-form-btn">Login</button>
+					</div>
+
+					<div class="text-center p-t-46 p-b-20">
+						<span class="txt2"> or sign up using </span>
+					</div>
+
+					<div class="login100-form-social flex-c-m">
+						<a href="#" class="login100-form-social-item flex-c-m bg1 m-r-5">
+							<i class="fa fa-facebook-f" aria-hidden="true"></i>
+						</a> 
+						<a href="#" class="login100-form-social-item flex-c-m bg2 m-r-5">
+							<i class="fa fa-twitter" aria-hidden="true"></i>
+						</a>
+					</div>
+					<input type="hidden" id="_csrf" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+				</form>
+
+				<div class="login100-more" style="margin-top: 8%;">
+					<div class="card">
+						<div class="card-body bg-light">
+							<div id="demo" class="carousel slide" data-ride="carousel" data-interval="2000">
+								<ul class="carousel-indicators">
+									<li data-target="#demo" data-slide-to="0" class="active"></li>
+									<li data-target="#demo" data-slide-to="1"></li>
+									<li data-target="#demo" data-slide-to="2"></li>
+									<li data-target="#demo" data-slide-to="3"></li>
+									<li data-target="#demo" data-slide-to="4"></li>
+									<li data-target="#demo" data-slide-to="5"></li>
+									<li data-target="#demo" data-slide-to="6"></li>
+									<li data-target="#demo" data-slide-to="7"></li>
+									<li data-target="#demo" data-slide-to="8"></li>
+									<li data-target="#demo" data-slide-to="9"></li>
+									<li data-target="#demo" data-slide-to="10"></li>
+									<li data-target="#demo" data-slide-to="11"></li>
+								</ul>
+								<div class="carousel-inner">
+									<div class="carousel-item active">
+										<img th:src="@{/content/login_v18/images/page-1.jpg}" alt="Service Request" width="900" height="500"/>
+										<div class="carousel-caption">
+											<h3>Service Request</h3>											
+										</div>
+									</div>
+									<div class="carousel-item">
+										<img th:src="@{/content/login_v18/images/page-2.jpg}" alt="Service Request" width="900" height="500"/>
+										<div class="carousel-caption">
+											<h3>Service Request</h3>
+										</div>
+									</div>
+									<div class="carousel-item">
+										<img th:src="@{/content/login_v18/images/page-3.jpg}" alt="Service Request" width="900" height="500"/>
+										<div class="carousel-caption">
+											<h3>Service Request</h3>
+										</div>
+									</div>
+									<div class="carousel-item">
+										<img th:src="@{/content/login_v18/images/page-4.jpg}" alt="Service Request" width="900" height="500"/>
+										<div class="carousel-caption">
+											<h3>Service Request</h3>
+										</div>
+									</div>
+									<div class="carousel-item">
+										<img th:src="@{/content/login_v18/images/page-5.jpg}" alt="Service Request" width="900" height="500"/>
+										<div class="carousel-caption">
+											<h3>Service Request</h3>
+										</div>
+									</div>
+									<div class="carousel-item">
+										<img th:src="@{/content/login_v18/images/page-6.jpg}" alt="Service Request" width="900" height="500"/>
+										<div class="carousel-caption">
+											<h3>Service Request</h3>
+										</div>
+									</div>
+									<div class="carousel-item">
+										<img th:src="@{/content/login_v18/images/page-7.jpg}" alt="Service Request" width="900" height="500"/>
+										<div class="carousel-caption">
+											<h3>Service Request</h3>
+										</div>
+									</div>
+									<div class="carousel-item">
+										<img th:src="@{/content/login_v18/images/page-8.jpg}" alt="Service Request" width="900" height="500"/>
+										<div class="carousel-caption">
+											<h3>Service Request</h3>
+										</div>
+									</div>
+									<div class="carousel-item">
+										<img th:src="@{/content/login_v18/images/page-9.jpg}" alt="Service Request" width="900" height="500"/>
+										<div class="carousel-caption">
+											<h3>Service Request</h3>
+										</div>
+									</div>
+									<div class="carousel-item">
+										<img th:src="@{/content/login_v18/images/page-10.jpg}" alt="Service Request" width="900" height="500"/>>
+										<div class="carousel-caption">
+											<h3>Service Request</h3>
+										</div>
+									</div>
+									<div class="carousel-item">
+										<img th:src="@{/content/login_v18/images/page-11.jpg}" alt="Service Request" width="900" height="500"/>
+										<div class="carousel-caption">
+											<h3>Service Request</h3>
+										</div>
+									</div>
+									<div class="carousel-item">
+										<img th:src="@{/content/login_v18/images/page-12.jpg}" alt="Service Request" width="900" height="500"/>
+										<div class="carousel-caption">
+											<h3>Service Request</h3>
+										</div>
+									</div>
+								</div>
+								<a class="carousel-control-prev" href="#demo" data-slide="prev">
+									<!-- <span class="carousel-control-prev-icon"></span> -->
+									<i class="fa fa-chevron-left fa-3x" style="color: #428bca;"></i>
+								</a> 
+								<a class="carousel-control-next" href="#demo" data-slide="next">
+									<!-- <span class="carousel-control-next-icon"></span> -->
+									<i class="fa fa-chevron-right fa-3x" style="color: #428bca;"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!--===============================================================================================-->
+	<script th:src="@{/content/login_v18/vendor/jquery/jquery-3.2.1.min.js}"></script>
+	<!--===============================================================================================-->
+	<script th:src="@{/content/login_v18/vendor/animsition/js/animsition.min.js}"></script>
+	<!--===============================================================================================-->
+	<script th:src="@{/content/login_v18/vendor/bootstrap/js/popper.js}"></script>
+	<script th:src="@{/content/login_v18/vendor/bootstrap/js/bootstrap.min.js}"></script>
+	<!--===============================================================================================-->
+	<script th:src="@{/content/login_v18/vendor/select2/select2.min.js}"></script>
+	<!--===============================================================================================-->
+	<script th:src="@{/content/login_v18/vendor/daterangepicker/moment.min.js}"></script>
+	<script th:src="@{/content/login_v18/vendor/daterangepicker/daterangepicker.js}"></script>
+	<!--===============================================================================================-->
+	<script th:src="@{/content/login_v18/vendor/countdowntime/countdowntime.js}"></script>
+	<!--===============================================================================================-->
+	<script th:src="@{/content/login_v18/js/main.js}"></script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		var _ctx = $("meta[name='ctx']").attr("content");
+		if (_ctx === undefined) {
+			_ctx = "";
+		}
+		$(document).ready(function() {			
+		});
+	/*]]>*/
+    </script>
+</body>
+</html>
