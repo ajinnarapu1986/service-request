@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sr.requestitem.RequestItemDto;
+import com.sr.requestitem.RequestItemService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,28 +33,35 @@ import lombok.extern.slf4j.Slf4j;
 public class RequestInfoController {
 
 	private final RequestInfoService requestInfoService;
+	private final RequestItemService requestItemService;
 
 	/**
 	 * 
+	 * @param model
 	 * @return
 	 */
 	@GetMapping("/list")
 	public String listRequestInfo(Model model) {
+		List<String> statusList = new ArrayList<>();
+		List<String> itemList = new ArrayList<>();
+		try {
+			statusList = Stream.of(RequestStatus.values()).map(Enum::name).collect(Collectors.toList());
 
-		List<String> statusList = Stream.of(RequestStatus.values()).map(Enum::name).collect(Collectors.toList());
+			DataTablesInput input = new DataTablesInput();
+			DataTablesOutput<RequestItemDto> data = requestItemService.findAll(input);
+			itemList = data.getData().stream().map(RequestItemDto::getItem).collect(Collectors.toList());
 
-		model.addAttribute("statusList", statusList);
+			RequestInfo requestInfo = new RequestInfo();
+			requestInfo.setStatus(RequestStatus.PENDING_L1.name());
 
-		List<String> requestTypeList = new ArrayList<>();
-		requestTypeList.add("Laptop");
-		requestTypeList.add("Desktop Req");
-		requestTypeList.add("ABC Req");
-
-		model.addAttribute("requestTypeList", requestTypeList);
-
-		RequestInfo requestInfo = new RequestInfo();
-		requestInfo.setStatus(RequestStatus.PENDING_L1.name());
-		model.addAttribute("requestInfo", requestInfo);
+			model.addAttribute("statusList", statusList);
+			model.addAttribute("requestTypeList", itemList);
+			model.addAttribute("requestInfo", requestInfo);
+		} catch (Exception e) {
+			log.error(":: Exception occured in listRequestInfo() {}::", e);
+		} finally {
+			log.info(":: Exited from listRequestInfo ::");
+		}
 		return "requestInfo";
 	}
 
@@ -69,7 +78,7 @@ public class RequestInfoController {
 
 	/**
 	 * 
-	 * @param name
+	 * @param id
 	 * @return
 	 */
 	@GetMapping("/get")
@@ -89,22 +98,24 @@ public class RequestInfoController {
 
 	/**
 	 * 
-	 * @param name
+	 * @param requestInfoDto
+	 * @param redirectAttrs
 	 * @return
 	 */
 	@PostMapping(value = "/approve")
 	@PreAuthorize("hasRole('ROLE_L1_APPROVE') or hasRole('ROLE_L2_APPROVE')")
 	public String approve(RequestInfoDto requestInfoDto, RedirectAttributes redirectAttrs) {
-		Long id = requestInfoDto.getId();
-		log.info(":: Entered into approve() :: {}", id);
+		log.info(":: Entered into approve() :: requestInfoDto = {}", requestInfoDto);
 
 		String message = "";
 		String alertCss = "";
 		try {
-			log.info(":: requestInfoDto ::" + requestInfoDto);
-
-			RequestInfoDto dbObj = requestInfoService.findOne(id);
-			dbObj.setStatus(RequestStatus.PENDING_L2.name());
+			RequestInfoDto dbObj = requestInfoService.findOne(requestInfoDto.getId());
+			if (dbObj.getStatus().equalsIgnoreCase(RequestStatus.PENDING_L1.name())) {
+				dbObj.setStatus(RequestStatus.PENDING_L2.name());
+			} else if (dbObj.getStatus().equalsIgnoreCase(RequestStatus.PENDING_L2.name())) {
+				dbObj.setStatus(RequestStatus.DISPATCH.name());
+			}
 
 			requestInfoDto = requestInfoService.save(dbObj);
 			message = "Request updated successfully.";
@@ -123,11 +134,12 @@ public class RequestInfoController {
 
 	/**
 	 * 
-	 * @param RequestType
+	 * @param requestInfoDto
+	 * @param redirectAttrs
 	 * @return
 	 */
 	@PostMapping("save")
-	//@PreAuthorize("hasRole('ROLE_USER')")
+	// @PreAuthorize("hasRole('ROLE_USER')")
 	public String saveRequestInfo(RequestInfoDto requestInfoDto, RedirectAttributes redirectAttrs) {
 		String message = "";
 		String alertCss = "";

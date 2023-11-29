@@ -8,8 +8,8 @@ public interface RequestInfoMapper {
 
 	RequestInfoMapper MAPPER = Mappers.getMapper(RequestInfoMapper.class);
 	
-	RequestInfoDto mapToRequestInfoDto(RequestInfo requestInfo);
+	RequestInfoDto toDto(RequestInfo requestInfo);
 
-	RequestInfo mapToRequestInfo(RequestInfoDto requestInfoDto);
+	RequestInfo toEntity(RequestInfoDto requestInfoDto);
 
 }
