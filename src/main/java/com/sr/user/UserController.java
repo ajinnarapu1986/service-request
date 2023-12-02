@@ -12,22 +12,18 @@ public class UserController {
 
 	@Autowired
 	private IUserService userService;
-	
+
 	// Go to Registration Page
 	@GetMapping("/register")
 	public String register() {
 		return "registerUser";
 	}
-	
+
 	// Read Form data to save into DB
 	@PostMapping("/saveUser")
-	public String saveUser(
-			@ModelAttribute User user,
-			Model model
-			) 
-	{
+	public String saveUser(@ModelAttribute User user, Model model) {
 		Integer id = userService.saveUser(user);
-		String message = "User '"+id+"' saved successfully !";
+		String message = "User '" + id + "' saved successfully !";
 		model.addAttribute("msg", message);
 		return "registerUser";
 	}

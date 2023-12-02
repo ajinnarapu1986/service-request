@@ -71,7 +71,7 @@ public class RequestInfoServiceImpl implements RequestInfoService {
 
 		log.info(":: requestInfo = {} ::", requestInfo);
 		if (null != requestInfo.getId()) {
-			mailUtility.sendHTMLMail(requestInfo.getId());
+			mailUtility.sendApprovalMail(requestInfo);
 		}
 
 		return mapper.toDto(requestInfo);

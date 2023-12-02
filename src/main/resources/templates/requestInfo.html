@@ -7,6 +7,8 @@
 	
 	<header th:replace="~{fragments/general.html :: header}"> </header>	
 	
+	<div id="loader"></div> 
+	
 	<div class="container-fluid">		
 	    <div class="row" >
 	    	<div class="col-md-12 ">
@@ -175,6 +177,8 @@
 			_ctx = "";
 		}
 		$(document).ready(function() {
+			$("#loader").fadeOut(1000);
+			
 			$("#menuHome").addClass('active');			
 			
 			$("body").tooltip({ selector: '[data-toggle=tooltip]' }); 
@@ -268,7 +272,8 @@
 						console.log(':: message ::' + message);
 						if ($.trim(message) !== '') {
 							swal('Please fill Validations!');
-						} else {							
+						} else {
+							$("#loader").fadeIn();
 							$("#requestInfoForm").submit();
 						}
 					}
@@ -288,7 +293,8 @@
 			  cancelButtonColor: '#d33',
 			  confirmButtonText: 'Submit',
 			}).then((result) => {
-				if (result.value) {					
+				if (result.value) {
+					$("#loader").fadeIn();
 					$("#requestInfoApproveForm").submit();
 				}
 			});

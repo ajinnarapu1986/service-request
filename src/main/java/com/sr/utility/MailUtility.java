@@ -5,6 +5,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
+import com.sr.requestinfo.RequestInfo;
+
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,23 +27,45 @@ public class MailUtility {
 	 * 
 	 * @param requestInfoId
 	 */
-	public void sendHTMLMail(Long requestInfoId) {
+	public void sendApprovalMail(RequestInfo requestInfo) {
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message);
 
-			helper.setSubject("Approval Request : Request Info Id - " + requestInfoId);
+			helper.setSubject("Approval Request : Request Info Id - " + requestInfo.getId());
 			helper.setFrom(fromAddress);
 			helper.setTo(fromAddress);
 
-			helper.setText(
-					"<p>There is a new open request for approval in your inbox.<p>Please login to the Service Portal to aaprove the request with Request ID "
-							+ requestInfoId + "</a><p>Thank you,</p>",
-					html);
+			helper.setText("<p>There is a new open request for approval in your inbox.<p>"
+					+ "Please login to the Service Portal to approve the request with Request ID " + requestInfo.getId()
+					+ "</a><p>Thank you,</p>", html);
 
 			mailSender.send(message);
 		} catch (Exception e) {
-			log.error(":: Error in sendHTMLMail() ::", e);
+			log.error(":: Error in sendApprovalMail() ::", e);
+		}
+	}
+
+	/**
+	 * 
+	 * @param requestInfoId
+	 */
+	public void sendEscalationMail(RequestInfo requestInfo, String level) {
+		try {
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message);
+
+			helper.setSubject(level + " for Approval Request : Request Info Id - " + requestInfo.getId());
+			helper.setFrom(fromAddress);
+			helper.setTo(fromAddress);
+
+			helper.setText("<p>There is a " + level + " for approval in your inbox.<p>"
+					+ "Please login to the Service Portal to approve the request with Request ID " + requestInfo.getId()
+					+ "</a><p>Thank you,</p>", html);
+
+			mailSender.send(message);
+		} catch (Exception e) {
+			log.error(":: Error in sendEscalationMail() ::", e);
 		}
 	}
 }

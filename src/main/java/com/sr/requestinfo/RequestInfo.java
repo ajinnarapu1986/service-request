@@ -37,16 +37,16 @@ public class RequestInfo {
 	@Column(name = "description")
 	private String description;
 	
-	@Column(name = "l1_approved_date")
+	@Column(name = "l1_approved_date", insertable = false)
 	private LocalDateTime l1ApprovedDate;
 	
-	@Column(name = "l1_escalation_mail_sent", nullable = false, columnDefinition = "boolean default false")
+	@Column(name = "l1_escalation_mail_sent", nullable = false, insertable = false, columnDefinition = "boolean default false")
 	private Boolean l1EscalationMailSent;
 	
-	@Column(name = "l2_approved_date")
+	@Column(name = "l2_approved_date", insertable = false)
 	private LocalDateTime l2ApprovedDate;
 	
-	@Column(name = "l2_escalation_mail_sent", nullable = false, columnDefinition = "boolean default false")
+	@Column(name = "l2_escalation_mail_sent", nullable = false, insertable = false, columnDefinition = "boolean default false")
 	private Boolean l2EscalationMailSent;
 
 	@Column(name = "created_by", nullable = false, updatable = false)

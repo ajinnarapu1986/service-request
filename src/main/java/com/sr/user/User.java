@@ -25,7 +25,7 @@ public class User {
 	private Integer id;
 
 	@Column(name = "user_name")
-	private String name;
+	private String username;
 
 	@Column(name = "user_passwd")
 	private String password;

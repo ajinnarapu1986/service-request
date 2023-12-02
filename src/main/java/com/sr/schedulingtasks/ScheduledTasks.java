@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.sr.requestinfo.RequestInfo;
 import com.sr.requestinfo.RequestInfoService;
+import com.sr.utility.MailUtility;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ public class ScheduledTasks {
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
 	private final RequestInfoService requestInfoService;
+	private final MailUtility mailUtility;
 
 	@Value("${l1.escalation.sla.mins}")
 	private Long l1EscalationSlaMins;
@@ -54,6 +56,9 @@ public class ScheduledTasks {
 				
 				if (mins > l1EscalationSlaMins && !reqInfo.getL1EscalationMailSent()) {
 					log.info(">>>>>>>>>>>>>>>>" + mins);
+					// Sending Escalation Mail for L1 Approve SLA
+					mailUtility.sendEscalationMail(reqInfo, "L1 Escalation");
+					
 					reqInfo.setL1EscalationMailSent(true);
 					requestInfoService.save(reqInfo);
 				}
@@ -87,6 +92,9 @@ public class ScheduledTasks {
 
 				if (mins > l2EscalationSlaMins && !reqInfo.getL2EscalationMailSent()) {
 					log.info(">>>>>>>>>>>>>>>>" + mins);
+					// Sending Escalation Mail for L2 Approve SLA
+					mailUtility.sendEscalationMail(reqInfo, "L2 Escalation");
+					
 					reqInfo.setL2EscalationMailSent(true);
 					requestInfoService.save(reqInfo);
 				}

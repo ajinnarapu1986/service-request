@@ -1,9 +1,10 @@
 package com.sr.user;
 
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,49 +21,32 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
+	/**
+	 * @param : user
+	 * @return : Integer
+	 */
 	@Override
 	public Integer saveUser(User user) {
-		String passwd = user.getPassword();
-		String encodedPasswod = passwordEncoder.encode(passwd);
-		user.setPassword(encodedPasswod);
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user = userRepo.save(user);
 		return user.getId();
 	}
 
+	/**
+	 * @param : usernameOrEmail
+	 * @return : UserDetails
+	 */
 	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
 
-		Optional<User> opt = userRepo.findUserByEmail(email);
+		User user = userRepo.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
+				.orElseThrow(() -> new UsernameNotFoundException("User not exists by Username or Email"));
 
-		if (opt.isEmpty())
-			throw new UsernameNotFoundException("User with email: " + email + " not found !");
-		else {
-			User user = opt.get();
-			return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
-					user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role)).collect(Collectors.toSet()));
-		}
+		Set<GrantedAuthority> authorities = user.getRoles().stream().map((role) -> new SimpleGrantedAuthority(role))
+				.collect(Collectors.toSet());
+
+		return new org.springframework.security.core.userdetails.User(usernameOrEmail, user.getPassword(), authorities);
 
 	}
-
-	// Other Approach: Without Using Lambda & Stream API Of Java 8
-
-	/**
-	 * @Override public UserDetails loadUserByUsername(String email) throws
-	 *           UsernameNotFoundException {
-	 * 
-	 *           Optional<User> opt = userRepo.findUserByEmail(email);
-	 * 
-	 *           org.springframework.security.core.userdetails.User springUser=null;
-	 * 
-	 *           if(opt.isEmpty()) { throw new UsernameNotFoundException("User with
-	 *           email: " +email +" not found"); } User user =opt.get();
-	 *           List<String> roles = user.getRoles(); Set<GrantedAuthority> ga =
-	 *           new HashSet<>(); for(String role:roles) { ga.add(new
-	 *           SimpleGrantedAuthority(role)); }
-	 * 
-	 *           springUser = new
-	 *           org.springframework.security.core.userdetails.User( email,
-	 *           user.getPassword(), ga ); return springUser; }
-	 */
 
 }
