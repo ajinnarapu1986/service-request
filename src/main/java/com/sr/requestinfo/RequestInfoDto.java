@@ -23,11 +23,11 @@ public class RequestInfoDto {
 	
 	private LocalDateTime l1ApprovedDate;
 	
-	private Boolean l1EscalationMailSent;	
+	private LocalDateTime l1EscalationMailSent;	
 	
 	private LocalDateTime l2ApprovedDate;
 	
-	private Boolean l2EscalationMailSent;
+	private LocalDateTime l2EscalationMailSent;
 
 	private String createdBy;
 	

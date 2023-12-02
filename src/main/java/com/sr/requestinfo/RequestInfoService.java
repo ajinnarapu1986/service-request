@@ -19,14 +19,14 @@ public interface RequestInfoService {
 	 * @param status
 	 * @return
 	 */
-	List<RequestInfo> findByStatusAndL1EscalationMailSent(String status, Boolean l1MailSent);
+	List<RequestInfo> findByStatusAndL1EscalationMailSentNull(String status);
 
 	/**
 	 * 
 	 * @param status
 	 * @return
 	 */
-	List<RequestInfo> findByStatusAndL2EscalationMailSentAndL1ApprovedDateNotNull(String status, Boolean l2MailSent);
+	List<RequestInfo> findByStatusAndL2EscalationMailSentNullAndL1ApprovedDateNotNull(String status);
 
 	/**
 	 * 

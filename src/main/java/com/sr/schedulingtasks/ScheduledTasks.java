@@ -48,18 +48,18 @@ public class ScheduledTasks {
 
 		List<RequestInfo> list = null;
 		try {
-			list = requestInfoService.findByStatusAndL1EscalationMailSent(PENDING_L1.name(), false);
+			list = requestInfoService.findByStatusAndL1EscalationMailSentNull(PENDING_L1.name());
 			list.stream().forEach(reqInfo -> {
 				Duration duration = Duration.between(LocalDateTime.now(), reqInfo.getCreatedDate());
 				long mins = Math.abs(duration.toMinutes());
 				log.info(">>>>>>>>>>>>>>>>" + mins);
 				
-				if (mins > l1EscalationSlaMins && !reqInfo.getL1EscalationMailSent()) {
+				if (mins > l1EscalationSlaMins && null == reqInfo.getL1EscalationMailSent()) {
 					log.info(">>>>>>>>>>>>>>>>" + mins);
 					// Sending Escalation Mail for L1 Approve SLA
 					mailUtility.sendEscalationMail(reqInfo, "L1 Escalation");
 					
-					reqInfo.setL1EscalationMailSent(true);
+					reqInfo.setL1EscalationMailSent(LocalDateTime.now());
 					requestInfoService.save(reqInfo);
 				}
 			});
@@ -84,18 +84,18 @@ public class ScheduledTasks {
 
 		List<RequestInfo> list = null;
 		try {
-			list = requestInfoService.findByStatusAndL2EscalationMailSentAndL1ApprovedDateNotNull(PENDING_L2.name(), false);
+			list = requestInfoService.findByStatusAndL2EscalationMailSentNullAndL1ApprovedDateNotNull(PENDING_L2.name());
 			list.stream().forEach(reqInfo -> {
 				Duration duration = Duration.between(LocalDateTime.now(), reqInfo.getL1ApprovedDate());
 				long mins = Math.abs(duration.toMinutes());
 				log.info(">>>>>>>>>>>>>>>>" + mins);
 
-				if (mins > l2EscalationSlaMins && !reqInfo.getL2EscalationMailSent()) {
+				if (mins > l2EscalationSlaMins && null == reqInfo.getL2EscalationMailSent()) {
 					log.info(">>>>>>>>>>>>>>>>" + mins);
 					// Sending Escalation Mail for L2 Approve SLA
 					mailUtility.sendEscalationMail(reqInfo, "L2 Escalation");
 					
-					reqInfo.setL2EscalationMailSent(true);
+					reqInfo.setL2EscalationMailSent(LocalDateTime.now());
 					requestInfoService.save(reqInfo);
 				}
 			});

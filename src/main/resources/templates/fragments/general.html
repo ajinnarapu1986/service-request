@@ -45,7 +45,9 @@
 				</li>
 				 -->
 				<li>
-					<a href="javascript: document.logoutForm.submit()"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Logout</a>
+					<a href="javascript: document.logoutForm.submit()">
+						<span class="glyphicon glyphicon-log-out color-green"></span>&nbsp;<span class="color-green">Logout</span>
+					</a>
 				   	<form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
 				      	<input type="submit" value="Logout"/>
 				   	</form>

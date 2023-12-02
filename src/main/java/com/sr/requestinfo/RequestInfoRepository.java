@@ -9,7 +9,7 @@ public interface RequestInfoRepository extends DataTablesRepository<RequestInfo,
 	
 	Optional<RequestInfo> findById(Long id);
 	
-	List<RequestInfo> findByStatusAndL1EscalationMailSent(String status, Boolean l1EscalationMailSent);
+	List<RequestInfo> findByStatusAndL1EscalationMailSentNull(String status);
 	
-	List<RequestInfo> findByStatusAndL2EscalationMailSentAndL1ApprovedDateNotNull(String status, Boolean l2EscalationMailSent);
+	List<RequestInfo> findByStatusAndL2EscalationMailSentNullAndL1ApprovedDateNotNull(String status);
 }

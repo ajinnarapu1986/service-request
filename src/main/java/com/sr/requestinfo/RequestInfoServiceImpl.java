@@ -92,19 +92,18 @@ public class RequestInfoServiceImpl implements RequestInfoService {
 	 * 
 	 */
 	@Override
-	public List<RequestInfo> findByStatusAndL1EscalationMailSent(String status, Boolean l1MailSent) {
+	public List<RequestInfo> findByStatusAndL1EscalationMailSentNull(String status) {
 
-		return requestInfoRepository.findByStatusAndL1EscalationMailSent(status, l1MailSent);
+		return requestInfoRepository.findByStatusAndL1EscalationMailSentNull(status);
 	}
 
 	/**
 	 * 
 	 */
 	@Override
-	public List<RequestInfo> findByStatusAndL2EscalationMailSentAndL1ApprovedDateNotNull(String status,
-			Boolean l2MailSent) {
+	public List<RequestInfo> findByStatusAndL2EscalationMailSentNullAndL1ApprovedDateNotNull(String status) {
 
-		return requestInfoRepository.findByStatusAndL2EscalationMailSentAndL1ApprovedDateNotNull(status, l2MailSent);
+		return requestInfoRepository.findByStatusAndL2EscalationMailSentNullAndL1ApprovedDateNotNull(status);
 	}
 
 	@Override
