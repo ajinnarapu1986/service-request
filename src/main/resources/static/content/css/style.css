@@ -1,5 +1,5 @@
 body {
-	background-image:url(../images/logo.png);	
+	background-image:url(../login_v18/images/bg-0111.jpg);	
 	background-repeat:no-repeat;  
 	background-size:cover;
 }
@@ -31,7 +31,7 @@ table .form-group {
 	
 }
 .navbar {
-	background-color: #FF8C00;
+	background-color: rgb(254, 255, 255);
 }
 
 .nav.navbar-nav.navbar-right li a {
@@ -41,7 +41,7 @@ table .form-group {
 
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
     /* background-color: #fff; */
-    background-color: #FF8C00;
+    background-color: rgb(234, 234, 234);
     color: #555555;
     font-weight: bold;
 }

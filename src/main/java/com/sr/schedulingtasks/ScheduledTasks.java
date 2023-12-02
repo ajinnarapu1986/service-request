@@ -36,6 +36,7 @@ public class ScheduledTasks {
 	
 	
 	/**
+	 * Scheduler to Send Mail for L1 Approval Escalation
 	 * 
 	 */
 	@Scheduled(cron = "${l1.scheduler.cron}")
@@ -68,6 +69,7 @@ public class ScheduledTasks {
 	}
 
 	/**
+	 * Scheduler to Send Mail for L2 Approval Escalation
 	 * 
 	 */
 	@Scheduled(cron = "${l2.scheduler.cron}")

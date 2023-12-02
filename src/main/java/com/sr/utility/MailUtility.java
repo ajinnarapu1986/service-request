@@ -15,12 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 public class MailUtility {
 
 	private final JavaMailSender mailSender;
-	
+
 	@Value("${spring.mail.username}")
 	private String fromAddress;
 
 	private static final boolean html = true;
-	
+
 	/**
 	 * 
 	 * @param requestInfoId
@@ -34,11 +34,14 @@ public class MailUtility {
 			helper.setFrom(fromAddress);
 			helper.setTo(fromAddress);
 
-			helper.setText("<b>Hey guys</b>,<br><i>Welcome to my new home</i>", html);
+			helper.setText(
+					"<p>There is a new open request for approval in your inbox.<p>Please login to the Service Portal to aaprove the request with Request ID "
+							+ requestInfoId + "</a><p>Thank you,</p>",
+					html);
 
 			mailSender.send(message);
 		} catch (Exception e) {
-			log.error(":: Error in sendHTMLMail() ::", e);			
+			log.error(":: Error in sendHTMLMail() ::", e);
 		}
 	}
 }
