@@ -1,47 +1,190 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <property name="LOGS" value="./logs" />
+	<property name="LOGS" value="./logs" />
 
-    <appender name="Console"
-        class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>
-                %black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1}): %msg%n%throwable
-            </Pattern>
-        </layout>
-    </appender>
+	<property name="CONSOLE_LOG_PATTERN" value="%highlight([%5p]) || %cyan([%-60.60logger{59}:%5L]) - %m%n%throwable" />
 
-    <appender name="RollingFile"
-        class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOGS}/spring-boot-logger.log</file>
-        <encoder
-            class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>%d %p %C{1} [%t] %m%n</Pattern>
-        </encoder>
+	<property name="FILE_LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] || [%5p] || [${PID:- }] || [%15.15t{14}] || [%-80.80logger{79}:%5L] - %m%n" />
 
-        <rollingPolicy
-            class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- rollover daily and when the file reaches 10 MegaBytes -->
-            <fileNamePattern>${LOGS}/archived/spring-boot-logger-%d{yyyy-MM-dd}.%i.log
-            </fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy
-                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>10MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-        </rollingPolicy>
-    </appender>
-    
-    <!-- LOG everything at INFO level -->
-    <root level="info">
-        <appender-ref ref="RollingFile" />
-        <appender-ref ref="Console" />
-    </root>
-
-    <!-- LOG "com.baeldung*" at TRACE level -->
-    <logger name="com.baeldung" level="trace" additivity="false">
-        <appender-ref ref="RollingFile" />
-        <appender-ref ref="Console" />
-    </logger>
+	
+	
+	<!-- put your loggers here -->
+	<springProfile name="local | dev">
+		<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+				<!-- <Pattern>%black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1}): 
+					%msg%n%throwable</Pattern> -->
+				<Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+			</encoder>
+		</appender>
+	
+		<appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">		
+			<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+				<!-- <Pattern>%d %p %C{1} [%t] %m%n</Pattern> -->
+				<Pattern>${FILE_LOG_PATTERN}</Pattern>
+			</encoder>
+			
+			<file>${LOGS}/sr.log</file>
+			
+			<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+				<!-- rollover daily -->
+				<fileNamePattern>${LOGS}/archived/sr.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+				<!-- each file should be at most 10MB, keep 30 days worth of history, but at most 300MB -->
+				<maxFileSize>10MB</maxFileSize>
+				<maxHistory>30</maxHistory>
+				<totalSizeCap>300MB</totalSizeCap>
+			</rollingPolicy>		
+		</appender>
+	
+		<logger name="org.springframework" additivity="false" level="INFO">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="ROLLING_FILE" />
+		</logger>
+	
+		<!-- <logger name="org.springframework.boot" additivity="false" level="WARN">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="ROLLING_FILE" />
+		</logger>
+	
+		<logger name="org.springframework.beans" additivity="false" level="WARN">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="ROLLING_FILE" />
+		</logger> -->
+	
+		<logger name="org.hibernate.SQL" additivity="false" level="INFO">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="ROLLING_FILE" />
+		</logger>
+	
+		<logger name="org.hibernate.type.descriptor.sql.BasicBinder" additivity="false" level="TRACE">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="ROLLING_FILE" />
+		</logger>
+	
+		<logger name="org.hibernate.type" additivity="false" level="INFO">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="ROLLING_FILE" />
+		</logger>
+	
+	</springProfile>
+	
+	<springProfile name="uat">
+		<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">				
+				<Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+			</encoder>
+		</appender>
+	
+		<appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">		
+			<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+				<!-- <Pattern>%d %p %C{1} [%t] %m%n</Pattern> -->
+				<Pattern>${FILE_LOG_PATTERN}</Pattern>
+			</encoder>
+			
+			<file>${LOGS}/sr.log</file>
+			
+			<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+				<!-- rollover daily -->
+				<fileNamePattern>${LOGS}/archived/sr.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+				<!-- each file should be at most 20MB, keep 60 days worth of history, but at most 10GB -->
+				<maxFileSize>20MB</maxFileSize>
+				<maxHistory>60</maxHistory>
+				<totalSizeCap>10GB</totalSizeCap>
+			</rollingPolicy>		
+		</appender>
+	
+		<logger name="org.springframework" additivity="false" level="ERROR">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="ROLLING_FILE" />
+		</logger>
+	
+		<logger name="org.hibernate.SQL" additivity="false" level="INFO">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="ROLLING_FILE" />
+		</logger>
+	
+		<logger name="org.hibernate.type.descriptor.sql.BasicBinder" additivity="false" level="TRACE">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="ROLLING_FILE" />
+		</logger>
+	
+		<logger name="org.hibernate.type" additivity="false" level="INFO">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="ROLLING_FILE" />
+		</logger>
+	</springProfile>
+	
+	<springProfile name="prod">
+		
+		<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+				<Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+			</encoder>
+		</appender>
+	
+		<appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">		
+			<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">				
+				<Pattern>${FILE_LOG_PATTERN}</Pattern>
+			</encoder>
+			
+			<file>${LOGS}/sr.log</file>
+			
+			<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+				<!-- rollover daily -->
+				<fileNamePattern>${LOGS}/archived/sr.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+				<!-- each file should be at most 20MB, keep 100 days worth of history, but at most 20GB -->
+				<maxFileSize>20MB</maxFileSize>
+				<maxHistory>100</maxHistory>
+				<totalSizeCap>20GB</totalSizeCap>
+			</rollingPolicy>		
+		</appender>
+		
+		
+		<logger name="org.springframework" additivity="false" level="ERROR">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="ROLLING_FILE" />
+		</logger>
+	
+		<logger name="org.hibernate.SQL" additivity="false" level="ERROR">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="ROLLING_FILE" />
+		</logger>
+	
+		<logger name="org.hibernate.type.descriptor.sql.BasicBinder" additivity="false" level="ERROR">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="ROLLING_FILE" />
+		</logger>
+	
+		<logger name="org.hibernate.type" additivity="false" level="ERROR">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="ROLLING_FILE" />
+		</logger>
+	</springProfile>
+	
+	
+	<springProfile name="local | dev">
+		<!-- put your root here -->
+		<root level="INFO">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="ROLLING_FILE" />		
+		</root>
+	</springProfile>
+	
+	<springProfile name="uat">
+		<!-- put your root here -->
+		<root level="ERROR">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="ROLLING_FILE" />		
+		</root>
+	</springProfile>
+	
+	<springProfile name="prod">
+		<!-- put your root here -->
+		<root level="ERROR">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="ROLLING_FILE" />		
+		</root>
+	</springProfile>
 
 </configuration>

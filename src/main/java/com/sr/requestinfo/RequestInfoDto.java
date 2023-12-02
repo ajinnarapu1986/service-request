@@ -20,6 +20,14 @@ public class RequestInfoDto {
 	private String status;
 
 	private String description;
+	
+	private LocalDateTime l1ApprovedDate;
+	
+	private Boolean l1EscalationMailSent;	
+	
+	private LocalDateTime l2ApprovedDate;
+	
+	private Boolean l2EscalationMailSent;
 
 	private String createdBy;
 	

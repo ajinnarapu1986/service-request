@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:/www.thymeleaf.org">
+<head>
+<title>Service Request</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="ctx" th:content="@{/}" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- favicon -->
+<!--===============================================================================================-->
+<link rel="icon" th:href="@{/content/images/favicon_16x16.png}" href="images/favicon-256.png" />
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" th:href="@{/content/login_v18/vendor/bootstrap/css/bootstrap.min.css}" />
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" th:href="@{/content/login_v18/fonts/font-awesome-4.7.0/css/font-awesome.min.css}" />
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" th:href="@{/content/login_v18/fonts/Linearicons-Free-v1.0.0/icon-font.min.css}" />
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" th:href="@{/content/login_v18/vendor/animate/animate.css}" />
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" th:href="@{/content/login_v18/vendor/css-hamburgers/hamburgers.min.css}" />
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" th:href="@{/content/login_v18/vendor/animsition/css/animsition.min.css}" />
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" th:href="@{/content/login_v18/css/util.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/content/login_v18/css/main.css}" />
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" th:href="@{/content/sweetalert2/dist/sweetalert2.css}" />
+<!--===============================================================================================-->
+<!-- <link rel="stylesheet" type="text/css" th:href="@{/css/sticky-footer-navbar.css}" /> -->
+<!--===============================================================================================-->
+<style type="text/css">
+	body {
+		background-color: #f7f7f7;
+	}
+	.carousel {
+		position: relative;
+		padding: 0px 10px;
+	}
+	.card-body {	    
+	    border: 1px solid #C0C0C0;
+	}
+</style>
+</head>
+<body>
+
+	<div class="limiter">
+		<div class="container">			
+			
+			<h3 class="mt-5">SOMTHING WENT WRONG! PLZ CONTACT MAINTENANCE TEAM</h3>
+			<div class="table-responsive">
+		     	<table  style="width: 100%" class="table table-hover table-bordered table-striped dt-responsive nowrap">
+					<tr>
+						<td>DATE</td>
+						<td th:text="${timestamp}"></td>
+					</tr>
+					
+					<tr>
+						<td>status</td>
+						<td th:text="${status}"></td>
+					</tr>
+					
+					<tr>
+						<td>error</td>
+						<td th:text="${error}"></td>
+					</tr>
+					
+					<tr>
+						<td>path</td>
+						<td th:text="${path}"></td>
+					</tr>
+					
+					<tr>
+						<td>Trace</td>
+						<td th:text="${trace}"></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+
+
+	<!--===============================================================================================-->
+	<script th:src="@{/content/login_v18/vendor/jquery/jquery-3.2.1.min.js}"></script>
+	<!--===============================================================================================-->
+	<script th:src="@{/content/login_v18/vendor/animsition/js/animsition.min.js}"></script>
+	<!--===============================================================================================-->
+	<script th:src="@{/content/login_v18/vendor/bootstrap/js/popper.js}"></script>
+	<script th:src="@{/content/login_v18/vendor/bootstrap/js/bootstrap.min.js}"></script>
+	<!--===============================================================================================-->
+	<script th:src="@{/content/login_v18/vendor/select2/select2.min.js}"></script>
+	<!--===============================================================================================-->
+	<script th:src="@{/content/login_v18/vendor/daterangepicker/moment.min.js}"></script>
+	<script th:src="@{/content/login_v18/vendor/daterangepicker/daterangepicker.js}"></script>
+	<!--===============================================================================================-->
+	<script th:src="@{/content/login_v18/vendor/countdowntime/countdowntime.js}"></script>
+	<!--===============================================================================================-->
+	<script th:src="@{/content/login_v18/js/main.js}"></script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		var _ctx = $("meta[name='ctx']").attr("content");
+		if (_ctx === undefined) {
+			_ctx = "";
+		}
+		$(document).ready(function() {			
+		});
+	/*]]>*/
+    </script>
+</body>
+</html>

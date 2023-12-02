@@ -39,6 +39,8 @@
 					                    <th>Created Date</th>
 					                    <th>Modified By</th>
 					                    <th>Modified Date</th>
+					                    <th>L1 Approved Date</th>
+					                    <th>L2 Approved Date</th>
 					                    <th data-orderable="false">Operation</th>
 						            </tr>
 								</thead>
@@ -205,7 +207,13 @@
 	                },
 	                {
 	                    data: 'modifiedDate',
-	                }, 
+	                },
+	                {
+	                    data: 'l1ApprovedDate',
+	                },
+	                {
+	                    data: 'l2ApprovedDate',
+	                },
 	                {
 						// add Operation column not persisted on the server-side
 						data : 'Operation',

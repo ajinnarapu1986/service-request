@@ -1,21 +1,24 @@
 package com.sr.requestinfo;
 
+import static com.sr.requestinfo.RequestStatus.DISPATCH;
+import static com.sr.requestinfo.RequestStatus.PENDING_L1;
+import static com.sr.requestinfo.RequestStatus.PENDING_L2;
+import static com.sr.role.RoleEnum.ROLE_DISPATCH;
+import static com.sr.role.RoleEnum.ROLE_L1_APPROVE;
+import static com.sr.role.RoleEnum.ROLE_L2_APPROVE;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.sr.role.RoleEnum;
+import com.sr.utility.MailUtility;
 
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,38 +28,26 @@ import lombok.extern.slf4j.Slf4j;
 public class RequestInfoServiceImpl implements RequestInfoService {
 
 	private final RequestInfoRepository requestInfoRepository;
-
-	private final JavaMailSender mailSender;
-
+	private final MailUtility mailUtility;
 	private final RequestInfoMapper mapper;
 
-	@Value("${spring.mail.username}")
-	private String fromAddress;
-
-	private static final boolean html = true;
-
+	/**
+	 * 
+	 */
 	@Override
 	public DataTablesOutput<RequestInfoDto> findAll(DataTablesInput input) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 		DataTablesOutput<RequestInfo> response = null;
-		if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(RoleEnum.ROLE_L1_APPROVE.name()))) {
-			Specification<RequestInfo> authoritySpec = RequestInfoSpecifications
-					.withStatus(RequestStatus.PENDING_L1.name());
-			response = requestInfoRepository.findAll(input, authoritySpec);
-		} else if (auth.getAuthorities().stream()
-				.anyMatch(a -> a.getAuthority().equals(RoleEnum.ROLE_L2_APPROVE.name()))) {
-			Specification<RequestInfo> authoritySpec = RequestInfoSpecifications
-					.withStatus(RequestStatus.PENDING_L2.name());
-			response = requestInfoRepository.findAll(input, authoritySpec);
-		} else if (auth.getAuthorities().stream()
-				.anyMatch(a -> a.getAuthority().equals(RoleEnum.ROLE_DISPATCH.name()))) {
-			Specification<RequestInfo> authoritySpec = RequestInfoSpecifications
-					.withStatus(RequestStatus.DISPATCH.name());
-			response = requestInfoRepository.findAll(input, authoritySpec);
+		if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(ROLE_L1_APPROVE.name()))) {
+			response = requestInfoRepository.findAll(input, RequestInfoSpecifications.withStatus(PENDING_L1.name()));
+		} else if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(ROLE_L2_APPROVE.name()))) {
+			response = requestInfoRepository.findAll(input, RequestInfoSpecifications.withStatus(PENDING_L2.name()));
+		} else if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(ROLE_DISPATCH.name()))) {
+			response = requestInfoRepository.findAll(input, RequestInfoSpecifications.withStatus(DISPATCH.name()));
 		} else {
-			requestInfoRepository.findAll(input);
+			response = requestInfoRepository.findAll(input);
 		}
 
 		DataTablesOutput<RequestInfoDto> responseDto = new DataTablesOutput<>();
@@ -69,6 +60,9 @@ public class RequestInfoServiceImpl implements RequestInfoService {
 		return responseDto;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public RequestInfoDto save(RequestInfoDto requestInfoDto) {
 
@@ -76,37 +70,47 @@ public class RequestInfoServiceImpl implements RequestInfoService {
 		requestInfo = requestInfoRepository.save(requestInfo);
 
 		log.info(":: requestInfo = {} ::", requestInfo);
-		if ( null != requestInfo.getId() ) {
-			this.sendHTMLMail(requestInfo.getId());
+		if (null != requestInfo.getId()) {
+			mailUtility.sendHTMLMail(requestInfo.getId());
 		}
 
 		return mapper.toDto(requestInfo);
 	}
 
-	@SuppressWarnings("unused")
-	private void sendHTMLMail(Long requestInfoId) {
-		try {
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(message);
-
-			helper.setSubject("Approval Request : Request Info Id - " + requestInfoId);
-			helper.setFrom(fromAddress);
-			helper.setTo(fromAddress);
-
-			helper.setText("<b>Hey guys</b>,<br><i>Welcome to my new home</i>", html);
-
-			mailSender.send(message);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
+	/**
+	 * 
+	 */
 	@Override
 	public RequestInfoDto findOne(Long id) {
 
-		Optional<RequestInfo> optional = requestInfoRepository.findOne(RequestInfoSpecifications.hasId(id));
+		Optional<RequestInfo> optional = requestInfoRepository.findById(id);
 
 		return optional.isPresent() ? mapper.toDto(optional.get()) : null;
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public List<RequestInfo> findByStatusAndL1EscalationMailSent(String status, Boolean l1MailSent) {
+
+		return requestInfoRepository.findByStatusAndL1EscalationMailSent(status, l1MailSent);
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public List<RequestInfo> findByStatusAndL2EscalationMailSentAndL1ApprovedDateNotNull(String status,
+			Boolean l2MailSent) {
+
+		return requestInfoRepository.findByStatusAndL2EscalationMailSentAndL1ApprovedDateNotNull(status, l2MailSent);
+	}
+
+	@Override
+	public RequestInfo save(RequestInfo requestInfo) {
+
+		return requestInfoRepository.save(requestInfo);
 	}
 
 }

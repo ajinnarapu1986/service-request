@@ -1,5 +1,6 @@
 package com.sr.requestinfo;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -112,8 +113,10 @@ public class RequestInfoController {
 		try {
 			RequestInfoDto dbObj = requestInfoService.findOne(requestInfoDto.getId());
 			if (dbObj.getStatus().equalsIgnoreCase(RequestStatus.PENDING_L1.name())) {
+				dbObj.setL1ApprovedDate(LocalDateTime.now());
 				dbObj.setStatus(RequestStatus.PENDING_L2.name());
 			} else if (dbObj.getStatus().equalsIgnoreCase(RequestStatus.PENDING_L2.name())) {
+				dbObj.setL2ApprovedDate(LocalDateTime.now());
 				dbObj.setStatus(RequestStatus.DISPATCH.name());
 			}
 
