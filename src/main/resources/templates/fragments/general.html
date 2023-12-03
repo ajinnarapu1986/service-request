@@ -6,7 +6,7 @@
 	<meta name="ctx" th:content="@{/}" />
 	
 	<!-- favicon -->
-	<link rel="icon" th:href="@{/content/images/favicon_16x16.png}" href="images/favicon_16x16.png"/>
+	<link rel="icon" th:href="@{/content/images/favicon_32x32.ico}" href="images/favicon_16x16.png"/>
 	
 	<link rel="stylesheet" type="text/css" th:href="@{/content/bs/css/bootstrap.min.css}" />
 	<link rel="stylesheet" type="text/css" th:href="@{/content/css/bootstrap-datepicker3.css}" href="css/bootstrap-datepicker3.css"/>
@@ -26,33 +26,11 @@
 				<span class="appName">Service Request</span>
 			</div>
 			<ul class="nav navbar-nav navbar-right">
-				<li> 
-					<a class="color-green" href="#">
-						<span class="glyphicon glyphicon-user"></span>&nbsp; Welcome, <span sec:authentication="name"></span>
-					</a>
-				</li>
+				<li><a class="color-green" href="#"><span class="glyphicon glyphicon-user"></span>&nbsp; Welcome, <span sec:authentication="name"></span></a></li>
 				<li id="menuHome" sec:authorize="hasAnyAuthority('ROLE_L1_APPROVE', 'ROLE_L2_APPROVE')" ><a class="color-green" th:href="@{/request-info/list}">Pending Approvals</a></li>
-				<li id="menuRequestItems" sec:authorize="hasAnyAuthority('ROLE_ADMIN')"><a class="color-green" th:href="@{/request-item/list}">Request Items</a></li>
-				<!--
-				<li id="menuReportLinks"><a style="color: #008000;" th:href="@{/report-link/}">Reports</a></li>			
-				<li id="menuDropdown" class="dropdown">
-					<a style="color: #008000;" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">More... <span class="caret"></span></a>
-					<ul class="dropdown-menu">
-					    <li id="menuCustomer"><a th:href="@{/customer/list}">Customer</a></li>
-						<li id="menuPriceList"><a th:href="@{/price-list/list}">Price List</a></li>
-		                <li role="separator" class="divider"></li>
-		                <li id="menuSalesReturn"><a th:href="@{/sales-return/}">Sales Return</a></li>
-						<li id="menuStockTransfer"><a th:href="@{/stock-transfer/}">Stock Transfer</a></li>
-						<li id="menuPouchPrint"><a th:href="@{/pouch-print/}">Pouch Print</a></li>
-						<li id="menuLedger"><a th:href="@{/ledger/list}">Ledger</a></li>
-						<li id="menuProcurement"><a th:href="@{/procurement/}">Procurement</a></li>
-					</ul>	
-				</li>
-				 -->
+				<li id="menuRequestItems" sec:authorize="hasAnyAuthority('ROLE_ADMIN')"><a class="color-green" th:href="@{/request-item/list}">Request Items</a></li>				
 				<li>
-					<a href="javascript: document.logoutForm.submit()">
-						<span class="glyphicon glyphicon-log-out color-green"></span>&nbsp;<span class="color-green">Logout</span>
-					</a>
+					<a class="color-green" href="javascript: document.logoutForm.submit()"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Logout</a>
 				   	<form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
 				      	<input type="submit" value="Logout"/>
 				   	</form>
