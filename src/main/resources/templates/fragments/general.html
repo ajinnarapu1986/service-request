@@ -22,12 +22,17 @@
       <nav th:fragment="header" class="navbar navbar-default ">
 		<div class="container">
 			<div class="navbar-header">
-				<a th:href="@{/request-info/list}"><img th:src="@{/content/images/logo.png}" /></a>
+				<a th:href="@{/request-info/list}"><img th:src="@{/content/images/logo.png}" height="50"/></a>
 				<span class="appName">Service Request</span>
 			</div>
 			<ul class="nav navbar-nav navbar-right">
+				<li> 
+					<a class="color-green" href="#">
+						<span class="glyphicon glyphicon-user"></span>&nbsp; Welcome, <span sec:authentication="name"></span>
+					</a>
+				</li>
 				<li id="menuHome" sec:authorize="hasAnyAuthority('ROLE_L1_APPROVE', 'ROLE_L2_APPROVE')" ><a class="color-green" th:href="@{/request-info/list}">Pending Approvals</a></li>
-				<li id="menuRequestItems"><a class="color-green" th:href="@{/request-item/list}">Request Items</a></li>
+				<li id="menuRequestItems" sec:authorize="hasAnyAuthority('ROLE_ADMIN')"><a class="color-green" th:href="@{/request-item/list}">Request Items</a></li>
 				<!--
 				<li id="menuReportLinks"><a style="color: #008000;" th:href="@{/report-link/}">Reports</a></li>			
 				<li id="menuDropdown" class="dropdown">
@@ -54,6 +59,7 @@
 			   	</li>	        
 			</ul>
 		</div>
+		<div id="loader"></div> 
 	</nav>
     
 	<div sec:authorize="isAuthenticated()">

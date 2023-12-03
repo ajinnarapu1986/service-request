@@ -24,7 +24,7 @@
 		    <div class="col-md-12">
 	            <div class="panel panel-primary">
 				  <div class="panel-heading">
-				    <h3 class="panel-title">Request History</h3> 				    
+				    <h3 class="panel-title">Request Items</h3> 				    
 				  </div>
 				     <div class="panel-body" >
 				     	<div class="table-responsive">
@@ -113,6 +113,7 @@
 			_ctx = "";
 		}
 		$(document).ready(function() {
+			$("#loader").fadeOut(1000);
 			$("#menuDropdown").addClass('active');
 			$("#menuRequestItems").addClass('active');	
 			
@@ -186,11 +187,11 @@
 				  cancelButtonColor: '#d33',
 				  confirmButtonText: 'Submit',
 				}).then((result) => {
-					if (result.value) {
-						console.log(':: message ::' + message);
+					if (result.value) {						
 						if ($.trim(message) !== '') {
 							swal('Please fill Validations!');
-						} else {							
+						} else {
+							$("#loader").fadeIn();
 							$("#requestItemForm").submit();
 						}
 					}

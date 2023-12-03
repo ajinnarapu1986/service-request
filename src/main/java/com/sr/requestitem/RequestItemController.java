@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("/request-item/")
 @Slf4j
-@PreAuthorize("isAuthenticated()")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class RequestItemController {
 
 	private final RequestItemService requestItemService;
@@ -76,7 +76,7 @@ public class RequestItemController {
 	 * @return
 	 */
 	@PostMapping("save")
-	//@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String saveRequestInfo(RequestItemDto requestItemDto, RedirectAttributes redirectAttrs) {
 		String message = "";
 		String alertCss = "";

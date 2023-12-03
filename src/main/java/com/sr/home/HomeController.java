@@ -5,18 +5,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class HomeController {	
+public class HomeController {
 
-	@GetMapping("/home")
-	public String getHomePage() {
-		return "homePage";
-	}
-
+	/**
+	 * 
+	 * @return
+	 */
 	@GetMapping("/login")
 	public String login() {
 		return "login";
 	}
 
+	/**
+	 * 
+	 * @param model
+	 * @return
+	 */
 	// Login form with error
 	@GetMapping("/login-error")
 	public String loginError(Model model) {
@@ -24,31 +28,10 @@ public class HomeController {
 		return "login";
 	}
 
-	@GetMapping("/admin")
-	public String getAdminPage() {
-		return "adminPage";
-	}
-
-	@GetMapping("/emp")
-	public String getEmployeePage() {
-		return "empPage";
-	}
-
-	@GetMapping("/mgr")
-	public String getManagerPage() {
-		return "mgrPage";
-	}
-
-	@GetMapping("/hr")
-	public String getHrPage() {
-		return "hrPage";
-	}
-
-	@GetMapping("/common")
-	public String getCommonPage() {
-		return "commonPage";
-	}
-
+	/**
+	 * 
+	 * @return
+	 */
 	@GetMapping("/accessDenied")
 	public String getAccessDeniedPage() {
 		return "accessDeniedPage";

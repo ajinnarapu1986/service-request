@@ -1,12 +1,16 @@
 package com.sr.utility;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import com.sr.exception.ApplicationException;
 import com.sr.requestinfo.RequestInfo;
 
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +31,9 @@ public class MailUtility {
 	 * 
 	 * @param requestInfoId
 	 */
-	public void sendApprovalMail(RequestInfo requestInfo) {
+	@Async
+	public void sendApprovalMail(RequestInfo requestInfo) throws ApplicationException {
+
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -41,8 +47,9 @@ public class MailUtility {
 					+ "</a><p>Thank you,</p>", html);
 
 			mailSender.send(message);
-		} catch (Exception e) {
+		} catch (MailException | MessagingException e) {
 			log.error(":: Error in sendApprovalMail() ::", e);
+			throw new ApplicationException("Exception while sending Mail.", e);
 		}
 	}
 
@@ -50,7 +57,7 @@ public class MailUtility {
 	 * 
 	 * @param requestInfoId
 	 */
-	public void sendEscalationMail(RequestInfo requestInfo, String level) {
+	public void sendEscalationMail(RequestInfo requestInfo, String level) throws ApplicationException {
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -64,8 +71,9 @@ public class MailUtility {
 					+ "</a><p>Thank you,</p>", html);
 
 			mailSender.send(message);
-		} catch (Exception e) {
+		} catch (MailException | MessagingException e) {
 			log.error(":: Error in sendEscalationMail() ::", e);
+			throw new ApplicationException("Exception while sending Mail.", e);
 		}
 	}
 }

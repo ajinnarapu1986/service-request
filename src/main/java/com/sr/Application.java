@@ -10,6 +10,7 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.datatables.repository.DataTablesRepositoryFactoryBean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -21,6 +22,7 @@ import com.sr.config.AuditorAwareImpl;
 @EnableJpaRepositories(repositoryFactoryBeanClass = DataTablesRepositoryFactoryBean.class)
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 @EnableScheduling
+@EnableAsync
 public class Application {
 
 	private static final String dateFormat = "yyyy-MM-dd";

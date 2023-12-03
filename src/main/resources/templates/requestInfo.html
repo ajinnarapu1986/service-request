@@ -7,8 +7,6 @@
 	
 	<header th:replace="~{fragments/general.html :: header}"> </header>	
 	
-	<div id="loader"></div> 
-	
 	<div class="container-fluid">		
 	    <div class="row" >
 	    	<div class="col-md-12 ">
@@ -268,8 +266,7 @@
 				  cancelButtonColor: '#d33',
 				  confirmButtonText: 'Submit',
 				}).then((result) => {
-					if (result.value) {
-						console.log(':: message ::' + message);
+					if (result.value) {						
 						if ($.trim(message) !== '') {
 							swal('Please fill Validations!');
 						} else {

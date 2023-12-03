@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.sr.exception.ApplicationException;
 import com.sr.utility.MailUtility;
 
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class RequestInfoServiceImpl implements RequestInfoService {
 	 * 
 	 */
 	@Override
-	public DataTablesOutput<RequestInfoDto> findAll(DataTablesInput input) {
+	public DataTablesOutput<RequestInfoDto> findAll(DataTablesInput input) throws ApplicationException {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -61,19 +62,27 @@ public class RequestInfoServiceImpl implements RequestInfoService {
 	}
 
 	/**
+	 * @throws ApplicationException
 	 * 
 	 */
 	@Override
-	public RequestInfoDto save(RequestInfoDto requestInfoDto) {
+	public RequestInfoDto save(RequestInfoDto requestInfoDto) throws ApplicationException {
+		RequestInfo requestInfo = null;
+		try {
+			requestInfo = mapper.toEntity(requestInfoDto);
+			requestInfo = requestInfoRepository.save(requestInfo);
 
-		RequestInfo requestInfo = mapper.toEntity(requestInfoDto);
-		requestInfo = requestInfoRepository.save(requestInfo);
-
-		log.info(":: requestInfo = {} ::", requestInfo);
-		if (null != requestInfo.getId()) {
-			mailUtility.sendApprovalMail(requestInfo);
+			log.info(":: requestInfo = {} ::", requestInfo);
+			if (null != requestInfo.getId()) {
+				mailUtility.sendApprovalMail(requestInfo);
+			}
+		} catch (ApplicationException appException) {
+			log.error(":: Exception while saving Request Info = {} ::", appException);
+			throw new ApplicationException(appException);
+		} catch (Exception e) {
+			log.error(":: Exception while saving Request Info = {} ::", e);
+			throw new ApplicationException("Exception while saving Request Info", e);
 		}
-
 		return mapper.toDto(requestInfo);
 	}
 
@@ -81,9 +90,15 @@ public class RequestInfoServiceImpl implements RequestInfoService {
 	 * 
 	 */
 	@Override
-	public RequestInfoDto findOne(Long id) {
+	public RequestInfoDto findOne(Long id) throws ApplicationException {
 
-		Optional<RequestInfo> optional = requestInfoRepository.findById(id);
+		Optional<RequestInfo> optional = Optional.empty();
+		try {
+			optional = requestInfoRepository.findById(id);
+		} catch (Exception e) {
+			log.error(":: RequestInfo not found with id = {} ::", id);
+			throw new ApplicationException("RequestInfo not found with id.", e);
+		}
 
 		return optional.isPresent() ? mapper.toDto(optional.get()) : null;
 	}
@@ -92,7 +107,7 @@ public class RequestInfoServiceImpl implements RequestInfoService {
 	 * 
 	 */
 	@Override
-	public List<RequestInfo> findByStatusAndL1EscalationMailSentNull(String status) {
+	public List<RequestInfo> findByStatusAndL1EscalationMailSentNull(String status) throws ApplicationException {
 
 		return requestInfoRepository.findByStatusAndL1EscalationMailSentNull(status);
 	}
@@ -101,15 +116,22 @@ public class RequestInfoServiceImpl implements RequestInfoService {
 	 * 
 	 */
 	@Override
-	public List<RequestInfo> findByStatusAndL2EscalationMailSentNullAndL1ApprovedDateNotNull(String status) {
+	public List<RequestInfo> findByStatusAndL2EscalationMailSentNullAndL1ApprovedDateNotNull(String status)
+			throws ApplicationException {
 
 		return requestInfoRepository.findByStatusAndL2EscalationMailSentNullAndL1ApprovedDateNotNull(status);
 	}
 
 	@Override
-	public RequestInfo save(RequestInfo requestInfo) {
-
-		return requestInfoRepository.save(requestInfo);
+	public RequestInfo save(RequestInfo requestInfo) throws ApplicationException {
+		RequestInfo requestInfo1 = null;
+		try {
+			requestInfo1 = requestInfoRepository.save(requestInfo);
+		} catch (Exception e) {
+			log.error(":: Error while saving the Request Info = {} ::", requestInfo);
+			throw new ApplicationException("Error while saving the Request Info.", e);
+		}
+		return requestInfo1;
 	}
 
 }

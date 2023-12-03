@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sr.exception.ApplicationException;
 import com.sr.requestitem.RequestItemDto;
 import com.sr.requestitem.RequestItemService;
 
@@ -70,10 +71,11 @@ public class RequestInfoController {
 	 * 
 	 * @param input
 	 * @return
+	 * @throws ApplicationException 
 	 */
 	@GetMapping(value = "/dt")
 	@ResponseBody
-	public DataTablesOutput<RequestInfoDto> listPOST(@Valid DataTablesInput input) {
+	public DataTablesOutput<RequestInfoDto> listPOST(@Valid DataTablesInput input) throws ApplicationException {
 		return requestInfoService.findAll(input);
 	}
 
@@ -149,7 +151,10 @@ public class RequestInfoController {
 		try {
 			log.info(":: requestInfoDto ::" + requestInfoDto);
 			requestInfoDto.setStatus(RequestStatus.PENDING_L1.name());
+
+			// Saving to the Database
 			requestInfoDto = requestInfoService.save(requestInfoDto);
+
 			message = "Request saved successfully.";
 			alertCss = "alert-success";
 		} catch (Exception e) {

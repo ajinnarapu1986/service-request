@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class GlobalControllerExceptionHandler {
 
 	public static final String DEFAULT_ERROR_VIEW = "error";
+	public static final String DEFAULT_ADE_ERROR_VIEW = "accessDeniedPage";
 
 	/**
 	 * 
@@ -37,4 +38,5 @@ public class GlobalControllerExceptionHandler {
 		return mav;
 	}
 
+	
 }
