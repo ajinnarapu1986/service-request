@@ -53,7 +53,7 @@ public class RequestInfoController {
 			DataTablesOutput<RequestItemDto> data = requestItemService.findAll(input);
 			itemList = data.getData().stream().map(RequestItemDto::getItem).collect(Collectors.toList());
 
-			RequestInfo requestInfo = new RequestInfo();
+			RequestInfoDto requestInfo = new RequestInfoDto();
 			requestInfo.setStatus(RequestStatus.PENDING_L1.name());
 
 			model.addAttribute("statusList", statusList);
@@ -105,22 +105,26 @@ public class RequestInfoController {
 	 * @param redirectAttrs
 	 * @return
 	 */
-	@PostMapping(value = "/approve")
+	@PostMapping(value = "/approveOrReject")
 	@PreAuthorize("hasRole('ROLE_L1_APPROVE') or hasRole('ROLE_L2_APPROVE')")
-	public String approve(RequestInfoDto requestInfoDto, RedirectAttributes redirectAttrs) {
+	public String approveOrReject(RequestInfoDto requestInfoDto, RedirectAttributes redirectAttrs) {
 		log.info(":: Entered into approve() :: requestInfoDto = {}", requestInfoDto);
 
 		String message = "";
 		String alertCss = "";
 		try {
 			RequestInfoDto dbObj = requestInfoService.findOne(requestInfoDto.getId());
-			if (dbObj.getStatus().equalsIgnoreCase(RequestStatus.PENDING_L1.name())) {
-				dbObj.setL1ApprovedDate(LocalDateTime.now());
-				dbObj.setStatus(RequestStatus.PENDING_L2.name());
-			} else if (dbObj.getStatus().equalsIgnoreCase(RequestStatus.PENDING_L2.name())) {
-				dbObj.setL2ApprovedDate(LocalDateTime.now());
-				dbObj.setStatus(RequestStatus.DISPATCH.name());
-			}
+			if (requestInfoDto.getApproveOrReject().equalsIgnoreCase(RequestStatus.REJECT.name())) {
+				dbObj.setStatus(RequestStatus.REJECT.name());
+			} else {
+				if (dbObj.getStatus().equalsIgnoreCase(RequestStatus.PENDING_L1.name())) {
+					dbObj.setL1ApprovedDate(LocalDateTime.now());
+					dbObj.setStatus(RequestStatus.PENDING_L2.name());
+				} else if (dbObj.getStatus().equalsIgnoreCase(RequestStatus.PENDING_L2.name())) {
+					dbObj.setL2ApprovedDate(LocalDateTime.now());
+					dbObj.setStatus(RequestStatus.DISPATCH.name());
+				}
+			}			
 
 			requestInfoDto = requestInfoService.save(dbObj);
 			message = "Request updated successfully.";
@@ -135,7 +139,7 @@ public class RequestInfoController {
 			redirectAttrs.addFlashAttribute("alertCss", alertCss);
 		}
 		return "redirect:/request-info/list";
-	}
+	}	
 
 	/**
 	 * 

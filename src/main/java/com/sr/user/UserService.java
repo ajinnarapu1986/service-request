@@ -1,6 +1,6 @@
 package com.sr.user;
 
-public interface IUserService {
+public interface UserService {
 
 	public Integer saveUser(User user);
 }

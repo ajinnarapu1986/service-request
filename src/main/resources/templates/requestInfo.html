@@ -113,7 +113,7 @@
 	            </div>
 	            <!-- Modal Body -->
 	            <div class="modal-body">
-	                <form action="#" class="form-horizontal" id="requestInfoApproveForm" th:object="${requestInfo}" th:action="@{/request-info/approve}" method="post">
+	                <form action="#" class="form-horizontal" id="requestInfoApproveForm" th:object="${requestInfo}" th:action="@{/request-info/approveOrReject}" method="post">
 	                  <div class="form-group">
 			                <label class="col-sm-3 control-label">Request Type</label>
 			                <div class="col-sm-9">
@@ -121,7 +121,8 @@
 								    <option value="" >-- Select --</option>
     								<option th:each="type : ${requestTypeList}" th:value="${type}" th:text="${type}"></option>
 								</select>
-								<input type="hidden" th:field="*{id}" id="editReqInfoId"/>			                    
+								<input type="hidden" th:field="*{id}" id="editReqInfoId"/>	                    
+								<input type="hidden" th:field="*{approveOrReject}" id="approveOrReject"/>	                    
 			                </div>
 			            </div>
 			            <div class="form-group">
@@ -142,8 +143,8 @@
 			            </div>
 			            <div class="modal-footer" >
 		            		<button type="button" class="btn btn-default btnMinWidth" data-dismiss="modal">Close</button>
-	               			<button type="button" class="btn btn-primary btnMinWidth" id="btnApproveRequestSubmit">Approve Request</button>
-	               			<button type="button" class="btn btn-danger btnMinWidth" id="btnRejectRequestSubmit">Reject Request</button>
+	               			<button type="button" class="btn btn-primary btnMinWidth" id="btnApproveRequest">Approve Request</button>
+	               			<button type="button" class="btn btn-danger btnMinWidth" id="btnRejectRequest">Reject Request</button>
 			            </div>
 	                </form>
 	            </div>
@@ -278,7 +279,7 @@
 			});
 		});
 		
-		$("#btnApproveRequestSubmit").on('click', function(e) {
+		$("#btnApproveRequest").on('click', function(e) {
 			
 			swal({
 			  title: 'Are you sure?',
@@ -292,10 +293,31 @@
 			}).then((result) => {
 				if (result.value) {
 					$("#loader").fadeIn();
+					$("#approveOrReject").val('approve');
 					$("#requestInfoApproveForm").submit();
 				}
 			});
-		});	
+		});
+		
+		$("#btnRejectRequest").on('click', function(e) {
+			
+			swal({
+			  title: 'Are you sure?',
+			  html: 'Are you sure you want to Reject the request.',
+			  type: 'info',
+			  showCancelButton: true,
+			  showCloseButton: true,
+			  confirmButtonColor: '#3085d6',
+			  cancelButtonColor: '#d33',
+			  confirmButtonText: 'Submit',
+			}).then((result) => {
+				if (result.value) {
+					$("#loader").fadeIn();
+					$("#approveOrReject").val('reject');
+					$("#requestInfoApproveForm").submit();
+				}
+			});
+		});
 		
 		var addNewServiceRequest = function() {			
 			$("#addNewServiceRequestModal").modal({
@@ -320,11 +342,11 @@
 		        		$("#editStatus").val(reqInfo.status);
 		        		$("#editDescription").val(reqInfo.description);
 		        		if (approveOrReject === 1) {
-		        			$("#btnRejectRequestSubmit").prop('disabled', true);
-		        			$("#btnApproveRequestSubmit").prop('disabled', false);
+		        			$("#btnRejectRequest").prop('disabled', true);
+		        			$("#btnApproveRequest").prop('disabled', false);
 		        		} else if (approveOrReject === 0) {
-		        			$("#btnApproveRequestSubmit").prop('disabled', true);
-		        			$("#btnRejectRequestSubmit").prop('disabled', false);
+		        			$("#btnApproveRequest").prop('disabled', true);
+		        			$("#btnRejectRequest").prop('disabled', false);
 		        		}
 		        	}
 		        },
